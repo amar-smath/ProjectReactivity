@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import axios from "axios";
 import { Header, List } from "semantic-ui-react";
