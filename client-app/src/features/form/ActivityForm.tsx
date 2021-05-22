@@ -2,17 +2,24 @@ import { ChangeEvent, useState } from "react";
 import { Button, Form, Segment } from "semantic-ui-react";
 import { useStore } from "./../../app/stores/store";
 import { observer } from "mobx-react";
+import { useHistory, useParams } from "react-router";
+import { useEffect } from "react";
+import LoadComponent from "../../app/layout/LoadComponent";
+import { v4 as uuid } from "uuid";
+import { Link } from "react-router-dom";
 
 export default observer(function ActivityForm() {
   const { activityStore } = useStore();
+  const history = useHistory();
   const {
-    selectedActivity,
-    setCloseForm,
+    loading,
     createActivity,
     updateActivity,
-    loading,
+    loadActivity,
+    loadingInitial,
   } = activityStore;
-  const initialState = selectedActivity ?? {
+  const { id } = useParams<{ id: string }>();
+  const [activity, setActivity] = useState({
     id: "",
     title: "",
     description: "",
@@ -20,9 +27,11 @@ export default observer(function ActivityForm() {
     date: "",
     city: "",
     venue: "",
-  };
+  });
 
-  const [activity, setActivity] = useState(initialState);
+  useEffect(() => {
+    if (id) loadActivity(id).then((activity) => setActivity(activity!));
+  }, [id, loadActivity]);
 
   function handleInputChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -31,10 +40,21 @@ export default observer(function ActivityForm() {
     setActivity({ ...activity, [name]: value });
   }
   function handleSubmit() {
-    debugger;
+    if (activity.id.length === 0) {
+      let newActivity = { ...activity, id: uuid() };
+      createActivity(newActivity).then(() =>
+        history.push(`/activities/${newActivity.id}`)
+      );
+    } else {
+      updateActivity(activity).then(() =>
+        history.push(`/activities/${activity.id}`)
+      );
+    }
+
     activity.id ? updateActivity(activity) : createActivity(activity);
   }
 
+  if (loadingInitial) return <LoadComponent content="Loading activity..." />;
   return (
     <Segment clearing>
       <Form onSubmit={handleSubmit} autoComplete="off">
@@ -83,10 +103,11 @@ export default observer(function ActivityForm() {
           loading={loading}
         />
         <Button
+          as={Link}
+          to="/activities"
           floated="right"
           content="Cancel"
           type="button"
-          onClick={setCloseForm}
         />
       </Form>
     </Segment>

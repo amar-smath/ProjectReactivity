@@ -1,8 +1,8 @@
 import { Button, Item, Label, Segment } from "semantic-ui-react";
-import { Activity } from "../../models/activity";
 import { SyntheticEvent, useState } from "react";
 import { useStore } from "./../../app/stores/store";
 import { observer } from "mobx-react";
+import { Link } from "react-router-dom";
 
 // interface Props {
 //   activities: Activity[];
@@ -42,7 +42,9 @@ export default observer(function ActivityList() {
                   content="View"
                   color="blue"
                   floated="right"
-                  onClick={() => activityStore.setSelectedActivity(x.id)}
+                  as={Link}
+                  to={`/activities/${x.id}`}
+                  // onClick={() => activityStore.setSelectedActivity(x.id)}
                 />
                 <Button
                   name={x.id}
