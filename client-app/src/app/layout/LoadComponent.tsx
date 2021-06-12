@@ -9,7 +9,6 @@ export default function LoadComponent({
   inverted = true,
   content = "Loading...",
 }: Props) {
-  debugger;
   return (
     <Dimmer active={true} inverted={inverted}>
       <Loader content={content} />

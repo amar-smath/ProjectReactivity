@@ -4,14 +4,15 @@ import { useStore } from "./../../app/stores/store";
 import { observer } from "mobx-react";
 import { useEffect } from "react";
 import LoadComponent from "../../app/layout/LoadComponent";
+import ActivityFilters from "./ActivityFilters";
 
 export default observer(function ActivitiesDashBoard() {
   const { activityStore } = useStore();
-  const { loadingActivities, activityRegistery } = activityStore;
+  const { loadActivities, activityRegistry } = activityStore;
 
   useEffect(() => {
-    if (activityRegistery.size <= 1) loadingActivities();
-  }, [activityRegistery.size, loadingActivities]);
+    if (activityRegistry.size <= 1) loadActivities();
+  }, [activityRegistry.size, loadActivities]);
 
   // useEffect(() => {
   //   activityStore.loadingActivities();
@@ -29,7 +30,7 @@ export default observer(function ActivitiesDashBoard() {
       <Grid.Column width="6">
         {/* {selectedActivity && !editMode && <ActivityDetails />}
         {editMode && <ActivityForm></ActivityForm>} */}
-        <h2>Activity Filters</h2>
+        <ActivityFilters />
       </Grid.Column>
     </Grid>
   );
