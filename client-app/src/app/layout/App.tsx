@@ -6,11 +6,17 @@ import { Route, useLocation } from "react-router";
 import ActivityForm from "../../features/form/ActivityForm";
 import HomePage from "../../features/home/homePage";
 import ActivityDetails from "./../../features/dashboard/ActivityDetails";
+import TestErrors from "./../../features/errors/TestError";
+import { ToastContainer } from "react-toastify";
+import NotFound from "./../../features/errors/NotFound";
+import { Switch } from "react-router-dom";
+import ServerErrors from "../../features/errors/ServerErrors";
 
 function App() {
   const location = useLocation();
   return (
     <>
+      <ToastContainer hideProgressBar position="bottom-right" />
       <Route exact path="/" component={HomePage}></Route>
       <Route
         path={"/(.+)"}
@@ -18,22 +24,28 @@ function App() {
           <>
             <NavBar />
             <Container style={{ marginTop: "7em" }}>
-              <Route
-                exact
-                path="/activities"
-                component={ActivitiesDashBoard}
-              ></Route>
-              <Route
-                exact
-                path="/activities/:id"
-                component={ActivityDetails}
-              ></Route>
-              <Route
-                key={location.key}
-                exact
-                path={["/createActivity", "/manage/:id"]}
-                component={ActivityForm}
-              ></Route>
+              <Switch>
+                <Route
+                  exact
+                  path="/activities"
+                  component={ActivitiesDashBoard}
+                ></Route>
+                <Route
+                  exact
+                  path="/activities/:id"
+                  component={ActivityDetails}
+                ></Route>
+                <Route
+                  key={location.key}
+                  exact
+                  path={["/createActivity", "/manage/:id"]}
+                  component={ActivityForm}
+                ></Route>
+
+                <Route path="/errors" component={TestErrors} />
+                <Route path="/server-error" component={ServerErrors} />
+                <Route component={NotFound} />
+              </Switch>
             </Container>
           </>
         )}
