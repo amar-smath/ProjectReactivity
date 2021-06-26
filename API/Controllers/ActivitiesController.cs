@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 
 using Application.Activities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -17,7 +18,6 @@ namespace API.Controllers
         {
             return HandleResult( await mediator.Send(new List.Query()));
         }
-        
         [HttpGet("{id}")]
         public async Task<IActionResult> GetActivity(Guid id)
         {
