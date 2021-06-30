@@ -1,7 +1,11 @@
-import { NavLink } from "react-router-dom";
-import { Button, Container, Menu } from "semantic-ui-react";
-export default function NavBar() {
-  // const { activityStore } = useStore();
+import { observer } from "mobx-react";
+import { Link, NavLink } from "react-router-dom";
+import { Button, Container, Menu, Image, Dropdown } from "semantic-ui-react";
+import { useStore } from "../stores/store";
+export default observer(function NavBar() {
+  const {
+    userStore: { user, logout },
+  } = useStore();
   return (
     <Menu inverted fixed="top">
       <Container>
@@ -24,7 +28,21 @@ export default function NavBar() {
             to="/createActivity"
           ></Button>
         </Menu.Item>
+        <Menu.Item position="right">
+          <Image src={user?.image || "assets/user.png"} avatar spaced="right" />
+          <Dropdown pointing="top left" text={user?.displayName}>
+            <Dropdown.Menu>
+              <Dropdown.Item
+                text="My Pofile"
+                as={Link}
+                to={`/profile/${user?.username}`}
+                icon="user"
+              />
+              <Dropdown.Item text="Logout" onClick={logout} icon="power" />
+            </Dropdown.Menu>
+          </Dropdown>
+        </Menu.Item>
       </Container>
     </Menu>
   );
-}
+});

@@ -43,26 +43,32 @@ namespace API.Controllers
     {
         if(await _userManager.Users.AnyAsync(x=> x.Email == resgisterDto.Email))
         {
-            return BadRequest("Email is already in use.");
+            // return BadRequest("Email is already in use.");
+            ModelState.AddModelError("email","Email Taken");
+            return ValidationProblem();
         }
         if(await _userManager.Users.AnyAsync(x=> x.UserName == resgisterDto.Username))
         {
-            return BadRequest("Username is already in use.");
+            // return BadRequest("Username is already in use.");
+            ModelState.AddModelError("username","Username Taken");
+            return ValidationProblem();
         }
         var user= new AppUser
         {
             UserName=resgisterDto.Username,
             Email=resgisterDto.Email,
-            DisplayName=resgisterDto.DisplayName
+            DisplayName=resgisterDto.DisplayName,
+          
+        
         };
-        var result= await _userManager.CreateAsync(user);
+        var result= await _userManager.CreateAsync(user,resgisterDto.Password);
         if(result.Succeeded)
         {
             return CreateUserObject(user);
         }
         return BadRequest("Problem in registering the user");
     }
-
+    [HttpGet("current")]
     public async Task<ActionResult<UserDto>> GetCurrentUser()
     {
         var user =await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));

@@ -19,7 +19,7 @@ export default observer(function ActivitiesDashBoard() {
   // }, [activityStore]);
 
   if (activityStore.loadingInitial)
-    return <LoadComponent content="Loading app.." />;
+    return <LoadComponent content="Loading activities.." />;
 
   // const { selectedActivity, editMode } = activityStore;
   return (
